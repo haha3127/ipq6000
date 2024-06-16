@@ -12,16 +12,21 @@ for ifname, stat in pairs(util.ubus("network.device", "status")) do
 
 		status = stat.carrier and 1 or 0
 
-		if stat.speed:sub(1, 1) == "-" or stat.speed:find("65535") then
-			speed = " - "
-		else
-			speed = stat.speed:sub(1, -2) .. "Mb/s"
-		end
+		if stat.speed then
+		    if stat.speed:sub(1, 1) == "-" or stat.speed:find("65535") then
+		        speed = " - "
+		    else
+		        speed = stat.speed:sub(1, -2) .. "Mb/s"
+		    end
 
-		if stat.carrier and stat.speed:sub(-1) == "F" then
+		    if stat.carrier and stat.speed:sub(-1) == "F" then
 			duplex = 1
-		else
+		    else
 			duplex = 0
+		    end
+		else
+		    speed = " - "
+		    duplex = 0
 		end
 
 		eth_info[#eth_info+1] = { name = ifname, status = status,
